@@ -1,16 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Swap Requests</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="p-6">
-  <h1 class="text-xl font-bold mb-4">My Swap Requests</h1>
-  <div class="bg-white p-4 shadow">
-    <p>Pending Request with <b>Ravi</b> for Photoshop skill</p>
-    <button class="bg-green-500 text-white px-2 py-1">Accept</button>
-    <button class="bg-red-500 text-white px-2 py-1 ml-2">Reject</button>
-    <button class="bg-gray-500 text-white px-2 py-1 ml-2">Delete</button>
-  </div>
-</body>
-</html>
+<script>
+  const requests = JSON.parse(localStorage.getItem("swapRequests") || "[]");
+  const myName = localStorage.getItem("username");
+  const container = document.body.querySelector("body");
+
+  requests.forEach((req, index) => {
+    if (req.to === myName || req.from === myName) {
+      container.innerHTML += `
+        <div class="bg-white p-4 shadow my-2 rounded">
+          <p><b>${req.from}</b> requested a swap for <b>${req.skill}</b> (Status: ${req.status})</p>
+          <button onclick="acceptSwap(${index})" class="bg-green-500 text-white px-2 py-1 mt-2">Accept</button>
+          <button onclick="rejectSwap(${index})" class="bg-red-500 text-white px-2 py-1 mt-2 ml-2">Reject</button>
+          <button onclick="deleteSwap(${index})" class="bg-gray-500 text-white px-2 py-1 mt-2 ml-2">Delete</button>
+        </div>
+      `;
+    }
+  });
+
+  function acceptSwap(i) {
+    const reqs = JSON.parse(localStorage.getItem("swapRequests"));
+    reqs[i].status = "Accepted";
+    localStorage.setItem("swapRequests", JSON.stringify(reqs));
+    location.reload();
+  }
+
+  function rejectSwap(i) {
+    const reqs = JSON.parse(localStorage.getItem("swapRequests"));
+    reqs[i].status = "Rejected";
+    localStorage.setItem("swapRequests", JSON.stringify(reqs));
+    location.reload();
+  }
+
+  function deleteSwap(i) {
+    const reqs = JSON.parse(localStorage.getItem("swapRequests"));
+    reqs.splice(i, 1);
+    localStorage.setItem("swapRequests", JSON.stringify(reqs));
+    location.reload();
+  }
+</script>
