@@ -6,21 +6,41 @@
 </head>
 <body class="p-6">
   <h1 class="text-2xl font-bold mb-4">My Profile</h1>
+
   <input id="skills" placeholder="Your Skills (comma separated)" class="border p-2 w-full mb-4"/>
-  <input id="wanted" placeholder="Skills Wanted" class="border p-2 w-full mb-4"/>
-  <input id="availability" placeholder="Availability (Weekends/Evenings)" class="border p-2 w-full mb-4"/>
-  <button onclick="saveProfile()" class="bg-blue-600 text-white px-4 py-2">Save</button>
+  <input id="wanted" placeholder="Skills You Want to Learn" class="border p-2 w-full mb-4"/>
+  <input id="availability" placeholder="Availability (e.g., Weekends)" class="border p-2 w-full mb-4"/>
+  <button onclick="saveProfile()" class="bg-blue-600 text-white px-4 py-2 rounded">Save Profile</button>
+
+  <div id="profileData" class="mt-6 bg-white p-4 rounded shadow hidden"></div>
 
   <script>
     function saveProfile() {
       const data = {
         skills: document.getElementById('skills').value,
         wanted: document.getElementById('wanted').value,
-        availability: document.getElementById('availability').value,
+        availability: document.getElementById('availability').value
       };
-      localStorage.setItem('profile', JSON.stringify(data));
-      alert('Profile saved!');
+      localStorage.setItem('userProfile', JSON.stringify(data));
+      alert('Profile Saved!');
+      showProfile();
     }
+
+    function showProfile() {
+      const data = JSON.parse(localStorage.getItem('userProfile'));
+      if (data) {
+        document.getElementById('profileData').innerHTML = `
+          <h2 class="font-bold text-lg mb-2">Saved Profile</h2>
+          <p><b>Skills:</b> ${data.skills}</p>
+          <p><b>Wants to Learn:</b> ${data.wanted}</p>
+          <p><b>Availability:</b> ${data.availability}</p>
+        `;
+        document.getElementById('profileData').classList.remove('hidden');
+      }
+    }
+
+    // Auto show if exists
+    window.onload = showProfile;
   </script>
 </body>
 </html>
