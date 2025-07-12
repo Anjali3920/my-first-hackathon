@@ -1,23 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="p-6">
-  <h1 class="text-xl font-bold mb-4">Welcome, <span id="username"></span>!</h1>
-  <input id="skillSearch" placeholder="Search skills like Photoshop" class="border p-2 mb-4 w-full" />
-  <button onclick="searchSkill()" class="bg-green-500 text-white px-4 py-2">Search</button>
-  <div id="results" class="mt-4"></div>
+<script>
+  // Show username from login
+  document.getElementById("username").innerText = localStorage.getItem("username");
 
-  <script>
-    document.getElementById("username").innerText = localStorage.getItem("username");
+  // Function to simulate search
+  function searchSkill() {
+    const skill = document.getElementById('skillSearch').value.toLowerCase();
+    const resultsDiv = document.getElementById('results');
+    
+    // Mock data - in real app, you'd fetch from DB
+    const userFound = {
+      name: "Ravi",
+      skill: skill,
+      availability: "Weekends",
+    };
 
-    function searchSkill() {
-      const skill = document.getElementById('skillSearch').value.toLowerCase();
-      let resultsDiv = document.getElementById('results');
-      resultsDiv.innerHTML = `<p>Mock result for skill: ${skill}</p><button class='bg-blue-500 text-white px-2 py-1 mt-2'>Request Swap</button>`;
-    }
-  </script>
-</body>
-</html>
+    resultsDiv.innerHTML = `
+      <div class="bg-white shadow p-4 mt-4 rounded">
+        <h2 class="font-bold text-lg">Name: ${userFound.name}</h2>
+        <p>Skill: ${userFound.skill}</p>
+        <p>Availability: ${userFound.availability}</p>
+        <button onclick="requestSwap('${userFound.name}', '${userFound.skill}')" class='bg-blue-500 text-white px-3 py-1 mt-3 rounded'>Request Swap</button>
+      </div>
+    `;
+  }
+
+  // Function to simulate swap request
+  function requestSwap(name, skill) {
+    const requests = JSON.parse(localStorage.getItem('swapRequests') || '[]');
+    requests.push({
+      to: name,
+      skill: skill,
+      from: localStorage.getItem('username'),
+      status: "Pending"
+    });
+    localStorage.setItem('swapRequests', JSON.stringify(requests));
+    alert(`Swap request sent to ${name} for ${skill}`);
+  }
+</script>
